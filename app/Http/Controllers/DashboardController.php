@@ -14,6 +14,15 @@ class DashboardController extends Controller
         if ($user->isAdmin()) {
             return view('admin.dashboard');
         }
-        return view('student.dashboard');
+
+        // Student stats and history
+        $attendances = $user->attendances()->with('schoolClass')->latest('date')->get();
+        $stats = [
+            'present' => $attendances->where('status', 'present')->count(),
+            'absent' => $attendances->where('status', 'absent')->count(),
+            'late' => $attendances->where('status', 'late')->count(),
+        ];
+
+        return view('student.dashboard', compact('attendances', 'stats'));
     }
 }
