@@ -31,10 +31,10 @@
             <p>Create classes and assign students to sections.</p>
             <a href="{{ route('admin.classes.index') }}" class="btn btn-primary">Go to Classes</a>
         </div>
-        <div class="card" style="padding: 1.5rem; border-style: dashed; text-align: center;">
+        <div class="card" style="padding: 1.5rem; text-align: center;">
             <h3>Mark Attendance</h3>
             <p>Record daily attendance for any class.</p>
-            <a href="#" class="btn btn-primary" style="opacity: 0.5; cursor: not-allowed;">Available in Phase 4</a>
+            <a href="{{ route('admin.attendance.index') }}" class="btn btn-primary">Mark Now</a>
         </div>
     </div>
 </div>
