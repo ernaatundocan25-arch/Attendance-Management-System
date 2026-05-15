@@ -21,10 +21,10 @@
     </div>
 
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
-        <div class="card" style="padding: 1.5rem; border-style: dashed; text-align: center;">
+        <div class="card" style="padding: 1.5rem; text-align: center;">
             <h3>Manage Students</h3>
             <p>Add, edit, or remove students from the system.</p>
-            <a href="#" class="btn btn-primary" style="opacity: 0.5; cursor: not-allowed;">Available in Phase 2</a>
+            <a href="{{ route('admin.students.index') }}" class="btn btn-primary">Go to Students</a>
         </div>
         <div class="card" style="padding: 1.5rem; border-style: dashed; text-align: center;">
             <h3>Manage Classes</h3>
