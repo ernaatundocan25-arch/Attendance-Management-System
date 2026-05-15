@@ -1,30 +1,28 @@
-@extends('layouts.app')
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Create New Class') }}
+        </h2>
+    </x-slot>
 
-@section('content')
-<div style="max-width: 600px; margin: 0 auto;">
-    <div class="card">
-        <h1 class="card-title">Create New Class</h1>
-        
-        @if($errors->any())
-            <div class="alert alert-danger">
-                @foreach($errors->all() as $error)
-                    <div>{{ $error }}</div>
-                @endforeach
-            </div>
-        @endif
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="max-w-2xl mx-auto bg-white overflow-hidden shadow-sm sm:rounded-lg p-8">
+                <form action="{{ route('admin.classes.store') }}" method="POST">
+                    @csrf
+                    
+                    <div class="mb-6">
+                        <x-input-label for="name" :value="__('Class / Section Name')" />
+                        <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name')" required placeholder="e.g. BSIT 1A" />
+                        <x-input-error class="mt-2" :messages="$errors->get('name')" />
+                    </div>
 
-        <form action="{{ route('admin.classes.store') }}" method="POST">
-            @csrf
-            <div class="form-group">
-                <label class="form-label">Class / Section Name</label>
-                <input type="text" name="name" class="form-control" value="{{ old('name') }}" required placeholder="e.g. BSIT 1A">
+                    <div class="flex items-center gap-4">
+                        <x-primary-button>{{ __('Create Class') }}</x-primary-button>
+                        <a href="{{ route('admin.classes.index') }}" class="text-sm text-gray-600 hover:text-gray-900 underline font-semibold">{{ __('Cancel') }}</a>
+                    </div>
+                </form>
             </div>
-
-            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
-                <button type="submit" class="btn btn-primary" style="flex: 1;">Create Class</button>
-                <a href="{{ route('admin.classes.index') }}" class="btn" style="background-color: #e2e8f0; color: #475569; text-align: center; flex: 1;">Cancel</a>
-            </div>
-        </form>
+        </div>
     </div>
-</div>
-@endsection
+</x-app-layout>

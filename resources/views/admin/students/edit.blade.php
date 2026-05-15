@@ -1,42 +1,41 @@
-@extends('layouts.app')
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Edit Student') }}
+        </h2>
+    </x-slot>
 
-@section('content')
-<div style="max-width: 600px; margin: 0 auto;">
-    <div class="card">
-        <h1 class="card-title">Edit Student</h1>
-        
-        @if($errors->any())
-            <div class="alert alert-danger">
-                @foreach($errors->all() as $error)
-                    <div>{{ $error }}</div>
-                @endforeach
-            </div>
-        @endif
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="max-w-2xl mx-auto bg-white overflow-hidden shadow-sm sm:rounded-lg p-8">
+                <form action="{{ route('admin.students.update', $student) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    
+                    <div class="mb-6">
+                        <x-input-label for="name" :value="__('Full Name')" />
+                        <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $student->name)" required />
+                        <x-input-error class="mt-2" :messages="$errors->get('name')" />
+                    </div>
 
-        <form action="{{ route('admin.students.update', $student) }}" method="POST">
-            @csrf
-            @method('PUT')
-            
-            <div class="form-group">
-                <label class="form-label">Full Name</label>
-                <input type="text" name="name" class="form-control" value="{{ old('name', $student->name) }}" required>
-            </div>
+                    <div class="mb-6">
+                        <x-input-label for="email" :value="__('Email Address')" />
+                        <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $student->email)" required />
+                        <x-input-error class="mt-2" :messages="$errors->get('email')" />
+                    </div>
 
-            <div class="form-group">
-                <label class="form-label">Email Address</label>
-                <input type="email" name="email" class="form-control" value="{{ old('email', $student->email) }}" required>
-            </div>
+                    <div class="mb-6">
+                        <x-input-label for="password" :value="__('New Password (leave blank to keep current)')" />
+                        <x-text-input id="password" name="password" type="password" class="mt-1 block w-full" placeholder="••••••••" />
+                        <x-input-error class="mt-2" :messages="$errors->get('password')" />
+                    </div>
 
-            <div class="form-group">
-                <label class="form-label">New Password (leave blank to keep current)</label>
-                <input type="password" name="password" class="form-control" placeholder="••••••••">
+                    <div class="flex items-center gap-4">
+                        <x-primary-button>{{ __('Update Student') }}</x-primary-button>
+                        <a href="{{ route('admin.students.index') }}" class="text-sm text-gray-600 hover:text-gray-900 underline font-semibold">{{ __('Cancel') }}</a>
+                    </div>
+                </form>
             </div>
-
-            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
-                <button type="submit" class="btn btn-primary" style="flex: 1;">Update Student</button>
-                <a href="{{ route('admin.students.index') }}" class="btn" style="background-color: #e2e8f0; color: #475569; text-align: center; flex: 1;">Cancel</a>
-            </div>
-        </form>
+        </div>
     </div>
-</div>
-@endsection
+</x-app-layout>
