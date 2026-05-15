@@ -12,6 +12,23 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <!-- Search Filter -->
+            <div class="mb-6 bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+                <form action="{{ route('admin.classes.index') }}" method="GET" class="flex gap-4">
+                    <div class="flex-grow">
+                        <x-text-input name="search" type="text" class="w-full" placeholder="Search by class name..." :value="request('search')" />
+                    </div>
+                    <x-primary-button>
+                        {{ __('Search') }}
+                    </x-primary-button>
+                    @if(request('search'))
+                        <a href="{{ route('admin.classes.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-300 transition">
+                            {{ __('Clear') }}
+                        </a>
+                    @endif
+                </form>
+            </div>
+
             @if(session('success'))
                 <div class="mb-4 bg-green-100 border-l-4 border-green-500 text-green-700 p-4 shadow-sm">
                     <p>{{ session('success') }}</p>

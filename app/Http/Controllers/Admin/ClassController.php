@@ -9,9 +9,15 @@ use Illuminate\Http\Request;
 
 class ClassController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $classes = SchoolClass::withCount('students')->get();
+        $query = SchoolClass::withCount('students');
+
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        $classes = $query->latest()->get();
         return view('admin.classes.index', compact('classes'));
     }
 

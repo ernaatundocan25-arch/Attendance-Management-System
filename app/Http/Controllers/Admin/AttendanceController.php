@@ -9,10 +9,26 @@ use Illuminate\Http\Request;
 
 class AttendanceController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $classes = SchoolClass::all();
-        return view('admin.attendance.index', compact('classes'));
+
+        // Fetch attendance sessions (Class + Date) for history
+        $query = Attendance::select('class_id', 'date')
+            ->groupBy('class_id', 'date')
+            ->with('schoolClass');
+
+        if ($request->filled('filter_class')) {
+            $query->where('class_id', $request->filter_class);
+        }
+
+        if ($request->filled('filter_date')) {
+            $query->whereDate('date', $request->filter_date);
+        }
+
+        $sessions = $query->latest('date')->get();
+
+        return view('admin.attendance.index', compact('classes', 'sessions'));
     }
 
     public function create(Request $request)
