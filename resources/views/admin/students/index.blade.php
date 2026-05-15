@@ -1,52 +1,60 @@
-@extends('layouts.app')
-
-@section('content')
-<div class="card">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-        <h1 class="card-title" style="margin: 0;">Manage Students</h1>
-        <a href="{{ route('admin.students.create') }}" class="btn btn-primary">+ Add New Student</a>
-    </div>
-
-    @if(session('success'))
-        <div class="alert" style="background-color: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; margin-bottom: 1.5rem;">
-            {{ session('success') }}
+<x-app-layout>
+    <x-slot name="header">
+        <div class="flex justify-between items-center">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                {{ __('Manage Students') }}
+            </h2>
+            <a href="{{ route('admin.students.create') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
+                + Add New Student
+            </a>
         </div>
-    @endif
+    </x-slot>
 
-    <div class="card" style="padding: 0; overflow: hidden;">
-        <table style="width: 100%; border-collapse: collapse;">
-            <thead>
-                <tr style="background-color: #f1f5f9; text-align: left;">
-                    <th style="padding: 1rem;">Name</th>
-                    <th style="padding: 1rem;">Email</th>
-                    <th style="padding: 1rem;">Registered Date</th>
-                    <th style="padding: 1rem; text-align: right;">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($students as $student)
-                    <tr style="border-bottom: 1px solid var(--border);">
-                        <td style="padding: 1rem; font-weight: 500;">{{ $student->name }}</td>
-                        <td style="padding: 1rem; color: var(--text-muted);">{{ $student->email }}</td>
-                        <td style="padding: 1rem; color: var(--text-muted);">{{ $student->created_at->format('M d, Y') }}</td>
-                        <td style="padding: 1rem; text-align: right;">
-                            <a href="{{ route('admin.students.edit', $student) }}" style="color: var(--primary); text-decoration: none; font-weight: 600; margin-right: 1rem;">Edit</a>
-                            <form action="{{ route('admin.students.destroy', $student) }}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" style="background: none; border: none; color: var(--danger); font-weight: 600; cursor: pointer;">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="4" style="padding: 3rem; text-align: center; color: var(--text-muted);">
-                            No students found. Click "Add New Student" to get started.
-                        </td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            @if(session('success'))
+                <div class="mb-4 bg-green-100 border-l-4 border-green-500 text-green-700 p-4 shadow-sm" role="alert">
+                    <p>{{ session('success') }}</p>
+                </div>
+            @endif
+
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="bg-gray-100 text-gray-600 text-xs uppercase tracking-wider">
+                                <th class="px-6 py-3">Name</th>
+                                <th class="px-6 py-3">Email</th>
+                                <th class="px-6 py-3">Registered Date</th>
+                                <th class="px-6 py-3 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            @forelse($students as $student)
+                                <tr class="hover:bg-gray-50 transition">
+                                    <td class="px-6 py-4 font-medium text-gray-900">{{ $student->name }}</td>
+                                    <td class="px-6 py-4 text-gray-600">{{ $student->email }}</td>
+                                    <td class="px-6 py-4 text-gray-500 text-sm">{{ $student->created_at->format('M d, Y') }}</td>
+                                    <td class="px-6 py-4 text-right space-x-3">
+                                        <a href="{{ route('admin.students.edit', $student) }}" class="text-blue-600 hover:text-blue-900 font-semibold text-sm">Edit</a>
+                                        <form action="{{ route('admin.students.destroy', $student) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-red-600 hover:text-red-900 font-semibold text-sm">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="px-6 py-12 text-center text-gray-500 italic">
+                                        No students found. Click "Add New Student" to get started.
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
-@endsection
+</x-app-layout>

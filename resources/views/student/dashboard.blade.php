@@ -1,61 +1,68 @@
-@extends('layouts.app')
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Student Dashboard') }}
+        </h2>
+    </x-slot>
 
-@section('content')
-<div class="card">
-    <h1 class="card-title">My Attendance Dashboard</h1>
-    <p style="color: var(--text-muted); margin-bottom: 2rem;">Welcome, {{ Auth::user()->name }}. Here is your attendance overview.</p>
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="p-6 bg-green-50 border border-green-200 rounded-xl text-center">
+                        <div class="text-4xl font-black text-green-600">{{ $stats['present'] }}</div>
+                        <div class="text-xs text-green-700 uppercase tracking-widest font-bold mt-1">Present</div>
+                    </div>
+                    <div class="p-6 bg-red-50 border border-red-200 rounded-xl text-center">
+                        <div class="text-4xl font-black text-red-600">{{ $stats['absent'] }}</div>
+                        <div class="text-xs text-red-700 uppercase tracking-widest font-bold mt-1">Absent</div>
+                    </div>
+                    <div class="p-6 bg-yellow-50 border border-yellow-200 rounded-xl text-center">
+                        <div class="text-4xl font-black text-yellow-600">{{ $stats['late'] }}</div>
+                        <div class="text-xs text-yellow-700 uppercase tracking-widest font-bold mt-1">Late</div>
+                    </div>
+                </div>
 
-    <div class="stats-grid">
-        <div class="stat-card" style="border-bottom: 4px solid var(--success);">
-            <div class="stat-value" style="color: var(--success);">{{ $stats['present'] }}</div>
-            <div class="stat-label">Present</div>
-        </div>
-        <div class="stat-card" style="border-bottom: 4px solid var(--danger);">
-            <div class="stat-value" style="color: var(--danger);">{{ $stats['absent'] }}</div>
-            <div class="stat-label">Absent</div>
-        </div>
-        <div class="stat-card" style="border-bottom: 4px solid var(--warning);">
-            <div class="stat-value" style="color: var(--warning);">{{ $stats['late'] }}</div>
-            <div class="stat-label">Late</div>
+                <div class="border rounded-xl overflow-hidden shadow-sm">
+                    <div class="bg-gray-50 px-6 py-4 border-b">
+                        <h3 class="font-bold text-gray-800">My Attendance History</h3>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead>
+                                <tr class="bg-gray-100 text-gray-600 text-xs uppercase tracking-wider">
+                                    <th class="px-6 py-3">Date</th>
+                                    <th class="px-6 py-3">Class</th>
+                                    <th class="px-6 py-3">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                @forelse($attendances as $attendance)
+                                    <tr class="hover:bg-gray-50 transition">
+                                        <td class="px-6 py-4 font-medium">{{ \Carbon\Carbon::parse($attendance->date)->format('M d, Y') }}</td>
+                                        <td class="px-6 py-4 text-gray-600">{{ $attendance->schoolClass->name }}</td>
+                                        <td class="px-6 py-4">
+                                            @if($attendance->status == 'present')
+                                                <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-bold uppercase">Present</span>
+                                            @elseif($attendance->status == 'absent')
+                                                <span class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs font-bold uppercase">Absent</span>
+                                            @else
+                                                <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-bold uppercase">Late</span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="3" class="px-6 py-12 text-center text-gray-500 italic">
+                                            No attendance records found yet.
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-
-    <div class="card" style="padding: 0; overflow: hidden;">
-        <div style="padding: 1.5rem; border-bottom: 1px solid var(--border);">
-            <h3 style="margin: 0;">My Attendance History</h3>
-        </div>
-        <table style="width: 100%; border-collapse: collapse;">
-            <thead>
-                <tr style="background-color: #f1f5f9; text-align: left;">
-                    <th style="padding: 1rem;">Date</th>
-                    <th style="padding: 1rem;">Class</th>
-                    <th style="padding: 1rem;">Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($attendances as $attendance)
-                    <tr style="border-bottom: 1px solid var(--border);">
-                        <td style="padding: 1rem; font-weight: 500;">{{ \Carbon\Carbon::parse($attendance->date)->format('M d, Y') }}</td>
-                        <td style="padding: 1rem; color: var(--text-muted);">{{ $attendance->schoolClass->name }}</td>
-                        <td style="padding: 1rem;">
-                            @if($attendance->status == 'present')
-                                <span style="background-color: #d1fae5; color: #065f46; padding: 0.25rem 0.75rem; border-radius: 1rem; font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">Present</span>
-                            @elseif($attendance->status == 'absent')
-                                <span style="background-color: #fee2e2; color: #991b1b; padding: 0.25rem 0.75rem; border-radius: 1rem; font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">Absent</span>
-                            @else
-                                <span style="background-color: #fef3c7; color: #92400e; padding: 0.25rem 0.75rem; border-radius: 1rem; font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">Late</span>
-                            @endif
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="3" style="padding: 3rem; text-align: center; color: var(--text-muted);">
-                            No attendance records found yet.
-                        </td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
-</div>
-@endsection
+</x-app-layout>
